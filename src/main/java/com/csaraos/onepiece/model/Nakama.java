@@ -20,4 +20,7 @@ public class Nakama {
     private String position;
     private Integer age;
     private Integer height;
+    @ManyToOne
+    @JoinColumn(name = "tripulation_id")
+    private Tripulation tripulation;
 }

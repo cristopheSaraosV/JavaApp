@@ -22,4 +22,8 @@ public class Tripulation {
 
     private String name;
 
+    @OneToMany(mappedBy = "tripulation")
+    @JsonIgnore
+    private List<Nakama> nakamas;
+
 }
