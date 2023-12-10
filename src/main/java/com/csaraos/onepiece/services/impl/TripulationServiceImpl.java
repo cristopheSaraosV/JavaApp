@@ -1,9 +1,9 @@
 package com.csaraos.onepiece.services.impl;
 
 import com.csaraos.onepiece.dto.ResponseDto;
-import com.csaraos.onepiece.model.Nakama;
-import com.csaraos.onepiece.repository.INakamaRepository;
-import com.csaraos.onepiece.services.INakamaService;
+import com.csaraos.onepiece.model.Tripulation;
+import com.csaraos.onepiece.repository.ITripulationRepository;
+import com.csaraos.onepiece.services.ITripulationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +13,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class NakamaServiceImpl implements INakamaService {
+public class TripulationServiceImpl implements ITripulationService {
 
     @Autowired
-    private INakamaRepository repositoryNakama;
+    private ITripulationRepository repositoryTripulation;
 
     @Override
-    public ResponseEntity getNakamas() {
-        ResponseDto res = new ResponseDto();
+    public ResponseEntity getTripulation() {
+        ResponseDto res =  new ResponseDto();
         try {
-            List<Nakama> listNakama = repositoryNakama.findAll();
+            List<Tripulation> listNakama = repositoryTripulation.findAll();
             res.setRes(listNakama);
             res.setCode(HttpStatus.OK.value());
             return ResponseEntity.ok().body(res);
-        } catch (Exception error) {
+        }catch (Exception error) {
             res.setMsg("Tuvimos un error:" + error);
             res.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(res);
@@ -34,16 +34,16 @@ public class NakamaServiceImpl implements INakamaService {
     }
 
     @Override
-    public ResponseEntity getNakamaById(Long id) {
+    public ResponseEntity getTripulationById(Long id) {
         ResponseDto res = new ResponseDto();
         try {
-            Optional<Nakama> nakamaSelected = repositoryNakama.findById(id);
-            if(nakamaSelected.isPresent()){
-                res.setRes(nakamaSelected);
+            Optional<Tripulation> tripulationSelected = repositoryTripulation.findById(id);
+            if(tripulationSelected.isPresent()){
+                res.setRes(tripulationSelected);
                 res.setCode(HttpStatus.OK.value());
                 return ResponseEntity.ok().body(res);
             }else{
-                res.setMsg("No existe un nakama con ese ID:");
+                res.setMsg("No existe una tripulacion con ese ID:");
                 res.setCode(HttpStatus.BAD_REQUEST.value());
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
             }
@@ -51,24 +51,22 @@ public class NakamaServiceImpl implements INakamaService {
             res.setMsg("Tuvimos un error:" + error);
             res.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(res);
-        }
-    };
+        }    }
 
     @Override
-    public ResponseEntity saveNakama(Nakama nakama) {
+    public ResponseEntity saveTripulation(Tripulation tripulation) {
         ResponseDto res = new ResponseDto();
         try {
-            Optional<Nakama> existingNakama = repositoryNakama.findTopByNameAndLastname(nakama.getName(), nakama.getLastname());
-            if (existingNakama.isPresent()) {
-                res.setMsg("Ya existe un nakama");
+            Optional<Tripulation> existingTripulation = repositoryTripulation.findTopByName(tripulation.getName());
+            if (existingTripulation.isPresent()) {
+                res.setMsg("Ya existe una tripulacion con ese nombre");
                 res.setCode(HttpStatus.CONFLICT.value());
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
             }
-            Optional<Nakama> nakamaCreated = Optional.of(repositoryNakama.save(nakama));
+            Optional<Tripulation> tripulationCreated = Optional.of(repositoryTripulation.save(tripulation));
             res.setCode(200);
-            res.setRes(nakamaCreated.orElse(null));
-            res.setCode(HttpStatus.OK.value());
-            return ResponseEntity.ok().body(res);
+            res.setRes(tripulationCreated.orElse(null));
+            return ResponseEntity.ok().body(tripulationCreated);
         } catch (Exception error) {
             res.setMsg("Tuvimos un error:" + error);
             res.setCode(HttpStatus.BAD_REQUEST.value());

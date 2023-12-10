@@ -12,5 +12,5 @@ import lombok.Setter;
 public class ResponseDto {
     private String msg;
     private Integer code;
-    private Nakama nakama;
+    private Object res;
 }

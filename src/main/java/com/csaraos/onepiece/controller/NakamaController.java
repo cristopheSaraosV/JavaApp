@@ -16,13 +16,13 @@ public class NakamaController {
 
     @GetMapping("nakama/all")
     @ResponseBody
-    public List<Nakama> getNakamas() {
+    public ResponseEntity getNakamas() {
         return characterService.getNakamas();
     };
 
     @GetMapping("nakama")
     @ResponseBody
-    public Nakama getNakamaById(@RequestParam Long id) {
+    public ResponseEntity getNakamaById(@RequestParam Long id) {
         return characterService.getNakamaById(id);
     };
 
