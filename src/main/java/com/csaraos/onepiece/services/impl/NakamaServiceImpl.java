@@ -2,7 +2,9 @@ package com.csaraos.onepiece.services.impl;
 
 import com.csaraos.onepiece.dto.ResponseDto;
 import com.csaraos.onepiece.model.Nakama;
+import com.csaraos.onepiece.model.Tripulation;
 import com.csaraos.onepiece.repository.INakamaRepository;
+import com.csaraos.onepiece.repository.ITripulationRepository;
 import com.csaraos.onepiece.services.INakamaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,8 @@ public class NakamaServiceImpl implements INakamaService {
 
     @Autowired
     private INakamaRepository repositoryNakama;
+    @Autowired
+    private ITripulationRepository repositoryTrupulation;
 
     @Override
     public ResponseEntity getNakamas() {
@@ -52,6 +56,28 @@ public class NakamaServiceImpl implements INakamaService {
             res.setCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(res);
         }
+    }
+
+    @Override
+    public ResponseEntity getNakamaByIdTripulation(Long id) {
+        ResponseDto res = new ResponseDto();
+        try {
+            Optional< List<Nakama> > nakamaSelected = repositoryNakama.findNakamaByTripulationId(id);
+            if(nakamaSelected.isPresent() ){
+                res.setCode(HttpStatus.OK.value());
+                res.setRes(nakamaSelected);
+                return ResponseEntity.status(HttpStatus.OK).body(res);
+            }else{
+                res.setMsg("No existe un nakama con ese ID de tripulacion:");
+                res.setCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+            }
+
+        }catch (Exception error){
+            res.setMsg("Tuvimos un error:" + error);
+            res.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
+        }
     };
 
     @Override
@@ -64,8 +90,15 @@ public class NakamaServiceImpl implements INakamaService {
                 res.setCode(HttpStatus.CONFLICT.value());
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
             }
+
+            Optional<Tripulation> existingTripulation = repositoryTrupulation.findById(nakama.getTripulation().getId() );
+            if (!existingTripulation.isPresent()) {
+                res.setMsg("No existe esa tripulacion");
+                res.setCode(HttpStatus.CONFLICT.value());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
+            }
             Optional<Nakama> nakamaCreated = Optional.of(repositoryNakama.save(nakama));
-            res.setCode(200);
+            res.setCode(HttpStatus.OK.value());
             res.setRes(nakamaCreated.orElse(null));
             res.setCode(HttpStatus.OK.value());
             return ResponseEntity.ok().body(res);

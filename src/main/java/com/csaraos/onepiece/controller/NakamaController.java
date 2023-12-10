@@ -26,6 +26,12 @@ public class NakamaController {
         return characterService.getNakamaById(id);
     };
 
+    @GetMapping("nakama/tripulation")
+    @ResponseBody
+    public ResponseEntity getNakamaByIdTripulation(@RequestParam Long id) {
+        return characterService.getNakamaByIdTripulation(id);
+    };
+
     @PostMapping("nakama/save")
     @ResponseBody
     public ResponseEntity saveNakama(@RequestBody Nakama nakamaReq) {

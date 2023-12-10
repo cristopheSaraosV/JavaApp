@@ -10,6 +10,7 @@ public interface INakamaService {
 
     public ResponseEntity getNakamas();
     public ResponseEntity getNakamaById(Long id);
+    public ResponseEntity getNakamaByIdTripulation(Long id);
     public ResponseEntity saveNakama(Nakama nakama);
 
 }
